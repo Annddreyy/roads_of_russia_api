@@ -37,7 +37,8 @@ def get_news():
                 'title': one_news[1],
                 'description': one_news[2],
                 'date': str(one_news[3]),
-                'author': f'{author[0]}.{author[1][0]}.{author[2][0]}'
+                'author': f'{author[0]}.{author[1][0]}.{author[2][0]}',
+                'image_path': one_news[5]
             }
         )
 

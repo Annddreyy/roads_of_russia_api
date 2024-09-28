@@ -1,5 +1,6 @@
 import pyodbc
-from flask import Flask, jsonify
+from click import command
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
@@ -223,6 +224,29 @@ def get_client(client_id):
     conn.close()
 
     return jsonify(clients_json)
+
+@app.route('/api/v1/news', methods=['POST'])
+def add_news():
+    conn = get_connection()
+    cur = conn.cursor()
+
+    news = request.get_json()
+
+    title = news['title']
+    description = news['description']
+    date = news['date']
+    author = news['author']
+    image_path = news['image_path']
+
+    cur.execute('INSERT INTO news(title, text, date, author_id, image_path) '
+                f"VALUES('{title}', '{description}', '{date}', {author}, '{image_path}')")
+    cur.commit()
+
+    cur.close()
+    conn.close()
+
+    return jsonify({'message': 'Новость успешно добавлена!'}), 200
+
 
 if __name__ == '__main__':
     app.run(port=2345)

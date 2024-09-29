@@ -1,5 +1,4 @@
 import pyodbc
-from click import command
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
@@ -226,6 +225,105 @@ def get_client(client_id):
 
     return jsonify(clients_json)
 
+@app.route('/api/v1/events', methods=['GET'])
+def get_events():
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute('SELECT * FROM event')
+
+    events = cur.fetchall()
+
+    events_json = []
+    for event in events:
+        event_type_id = event[3]
+        cur.execute(f'SELECT title FROM event_type WHERE event_type_id={event_type_id}')
+        event_type = cur.fetchone()[0]
+
+        author_id = event[4]
+        cur.execute(f'SELECT surname, name, patronymic '
+                    f'FROM client WHERE client_id={author_id}')
+        client = cur.fetchone()
+
+        events_json.append(
+            {
+                'id': event[0],
+                'title': event[1],
+                'description': event[2],
+                'event_type': event_type,
+                'author': f'{client[0]} {client[1][0]}. {client[2][0]}.',
+                'image_path': event[5],
+                'date_start': str(event[6]),
+                'date_end': str(event[7])
+            }
+        )
+
+    return jsonify(events_json)
+
+@app.route('/api/v1/events/<int:event_id>', methods=['GET'])
+def get_one_event(event_id):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute(f'SELECT * FROM event WHERE event_id={event_id}')
+
+    events = cur.fetchall()
+
+    events_json = []
+    for event in events:
+        event_type_id = event[3]
+        cur.execute(f'SELECT title FROM event_type WHERE event_type_id={event_type_id}')
+        event_type = cur.fetchone()[0]
+
+        author_id = event[4]
+        cur.execute(f'SELECT surname, name, patronymic '
+                    f'FROM client WHERE client_id={author_id}')
+        client = cur.fetchone()
+
+        events_json.append(
+            {
+                'id': event[0],
+                'title': event[1],
+                'description': event[2],
+                'event_type': event_type,
+                'author': f'{client[0]} {client[1][0]}. {client[2][0]}.',
+                'image_path': event[5],
+                'date_start': str(event[6]),
+                'date_end': str(event[7])
+            }
+        )
+
+    return jsonify(events_json)
+
+@app.route('/api/v1/learnings', methods=['GET'])
+def get_learnings():
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute('SELECT event_id, title, description, author_id, image_path, date_start, date_end '
+                'FROM event WHERE event_type_id=1')
+    learnings = cur.fetchall()
+
+    learnings_json = []
+    for learning in learnings:
+        author_id = learning[3]
+        cur.execute(f'SELECT surname, name, patronymic FROM client WHERE client_id={author_id}')
+        author = cur.fetchone()
+
+        learnings_json.append(
+            {
+                'id': learning[0],
+                'title': learning[1],
+                'description': learning[2],
+                'author': f'{author[0]} {author[1][0]}. {author[2][0]}.',
+                'image_path': learning[4],
+                'date_start': learning[5],
+                'date_end': learning[6]
+            }
+        )
+
+    return jsonify(learnings_json)
+
 @app.route('/api/v1/news', methods=['POST'])
 def add_news():
     conn = get_connection()
@@ -247,6 +345,7 @@ def add_news():
     conn.close()
 
     return jsonify({'message': 'Новость успешно добавлена!'}), 200
+
 
 if __name__ == '__main__':
     app.run(port=2345)

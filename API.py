@@ -29,7 +29,7 @@ def get_news():
     news_json = []
     for one_news in news:
         author_id = one_news[4]
-        cur.execute(f'SELECT surname, name, patronymic FROM client WHERE client_id={author_id}')
+        cur.execute(f'SELECT surname, name, patronymic, photo FROM client WHERE client_id={author_id}')
         author = cur.fetchone()
 
         news_json.append(
@@ -39,6 +39,7 @@ def get_news():
                 'description': one_news[2],
                 'date': str(one_news[3]),
                 'author': f'{author[0]}.{author[1][0]}.{author[2][0]}',
+                'photo': author[3],
                 'image_path': one_news[5]
             }
         )
@@ -246,7 +247,6 @@ def add_news():
     conn.close()
 
     return jsonify({'message': 'Новость успешно добавлена!'}), 200
-
 
 if __name__ == '__main__':
     app.run(port=2345)

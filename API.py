@@ -317,12 +317,39 @@ def get_learnings():
                 'description': learning[2],
                 'author': f'{author[0]} {author[1][0]}. {author[2][0]}.',
                 'image_path': learning[4],
-                'date_start': learning[5],
-                'date_end': learning[6]
+                'date_start': str(learning[5]),
+                'date_end': str(learning[6])
             }
         )
 
     return jsonify(learnings_json)
+
+@app.route('/api/v1/learnings/<int:learning_id>')
+def get_one_learning(learning_id):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute('SELECT event_id, title, description, author_id, image_path, date_start, date_end '
+                f'FROM event WHERE event_type_id=1 AND event_id={learning_id}')
+    learning = cur.fetchone()
+
+    cur.execute(f'SELECT surname, name, patronymic FROM client WHERE client_id={learning[3]}')
+    author = cur.fetchone()
+
+    learning_json = [
+        {
+            'id': learning[0],
+            'title': learning[1],
+            'description': learning[2],
+            'author': f'{author[0]} {author[1][0]}. {author[2][0]}',
+            'image_path': learning[4],
+            'date_start': str(learning[5]),
+            'date_end': str(learning[6])
+        }
+    ]
+
+    return jsonify(learning_json)
+
 
 @app.route('/api/v1/news', methods=['POST'])
 def add_news():

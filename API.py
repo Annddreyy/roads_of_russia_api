@@ -50,34 +50,40 @@ def get_news():
 
 @app.route('/api/v1/news/<int:news_id>', methods=['GET'])
 def get_one_news(news_id):
-    conn = get_connection()
-    cur = conn.cursor()
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
 
-    cur.execute(f'SELECT * FROM news WHERE news_id={news_id}')
+        cur.execute(f'SELECT * FROM news WHERE news_id={news_id}')
 
-    news = cur.fetchone()
+        news = cur.fetchone()
 
-    news_json = []
+        if news:
+            news_json = []
 
-    author_id = news[4]
-    cur.execute(f'SELECT surname, name, patronymic FROM client WHERE client_id={author_id}')
-    author = cur.fetchone()
+            author_id = news[4]
+            cur.execute(f'SELECT surname, name, patronymic FROM client WHERE client_id={author_id}')
+            author = cur.fetchone()
 
-    news_json.append(
-        {
-            'id': news[0],
-            'title': news[1],
-            'description': news[2],
-            'date': str(news[3]),
-            'author': f'{author[0]}.{author[1][0]}.{author[2][0]}',
-            'image_path': news[5]
-        }
-    )
+            news_json.append(
+                {
+                    'id': news[0],
+                    'title': news[1],
+                    'description': news[2],
+                    'date': str(news[3]),
+                    'author': f'{author[0]}.{author[1][0]}.{author[2][0]}',
+                    'image_path': news[5]
+                }
+            )
 
-    cur.close()
-    conn.close()
+            cur.close()
+            conn.close()
 
-    return jsonify(news_json)
+            return jsonify(news_json)
+        else:
+            return {'message': 'no news with such id'}
+    except:
+        return {'message': 'error'}
 
 @app.route('/api/v1/resume', methods=['GET'])
 def get_resume():
@@ -110,32 +116,38 @@ def get_resume():
 
 @app.route('/api/v1/resume/<int:resume_id>', methods=['GET'])
 def get_one_resume(resume_id):
-    conn = get_connection()
-    cur = conn.cursor()
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
 
-    cur.execute(f'SELECT * FROM resume WHERE resume_id={resume_id}')
+        cur.execute(f'SELECT * FROM resume WHERE resume_id={resume_id}')
 
-    resume = cur.fetchone()
+        resume = cur.fetchone()
 
-    resume_json = []
+        if resume:
+            resume_json = []
 
-    job_id = resume[5]
-    cur.execute(f'SELECT title FROM job_title WHERE job_title_id={job_id}')
-    job = cur.fetchone()
+            job_id = resume[5]
+            cur.execute(f'SELECT title FROM job_title WHERE job_title_id={job_id}')
+            job = cur.fetchone()
 
-    resume_json.append(
-        {
-            'id': resume[0],
-            'author': f'{resume[1]} {resume[2][0]}. {resume[3][0]}.',
-            'file_path': resume[4].split('/')[-1],
-            'job_title': job[0]
-        }
-    )
+            resume_json.append(
+                {
+                    'id': resume[0],
+                    'author': f'{resume[1]} {resume[2][0]}. {resume[3][0]}.',
+                    'file_path': resume[4].split('/')[-1],
+                    'job_title': job[0]
+                }
+            )
 
-    cur.close()
-    conn.close()
+            cur.close()
+            conn.close()
 
-    return jsonify(resume_json)
+            return jsonify(resume_json)
+        else:
+            return {'message': 'no resume with such id'}
+    except:
+        return {'message': 'error'}
 
 @app.route('/api/v1/clients', methods=['GET'])
 def get_clients():
@@ -184,48 +196,54 @@ def get_clients():
 
 @app.route('/api/v1/clients/<int:client_id>', methods=['GET'])
 def get_client(client_id):
-    conn = get_connection()
-    cur = conn.cursor()
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
 
-    cur.execute(f'SELECT * FROM client WHERE client_id={client_id}')
+        cur.execute(f'SELECT * FROM client WHERE client_id={client_id}')
 
-    client = cur.fetchone()
+        client = cur.fetchone()
 
-    client_json = []
+        if client:
+            client_json = []
 
-    department_id = client[13]
-    cur.execute(f'SELECT title FROM department WHERE department_id={department_id}')
-    department = cur.fetchone()[0]
+            department_id = client[13]
+            cur.execute(f'SELECT title FROM department WHERE department_id={department_id}')
+            department = cur.fetchone()[0]
 
-    job_id = client[14]
-    cur.execute(f'SELECT title FROM job_title WHERE job_title_id={job_id}')
-    job = cur.fetchone()[0]
+            job_id = client[14]
+            cur.execute(f'SELECT title FROM job_title WHERE job_title_id={job_id}')
+            job = cur.fetchone()[0]
 
-    role_id = client[15]
-    cur.execute(f'SELECT title FROM system_role WHERE system_role_id={role_id}')
-    role = cur.fetchone()[0]
+            role_id = client[15]
+            cur.execute(f'SELECT title FROM system_role WHERE system_role_id={role_id}')
+            role = cur.fetchone()[0]
 
-    client_json.append(
-        {
-            'id': client[0],
-            'FIO': f'{client[1]} {client[2][0]}. {client[3][0]}.',
-            'photo': client[6].split('/')[-1],
-            'adress': client[7],
-            'phone': client[8],
-            'email': client[9],
-            'birthday_date': str(client[10]),
-            'cabinet': client[11],
-            'dop_information': client[12],
-            'department': department,
-            'job': job,
-            'role': role
-        }
-    )
+            client_json.append(
+                {
+                    'id': client[0],
+                    'FIO': f'{client[1]} {client[2][0]}. {client[3][0]}.',
+                    'photo': client[6].split('/')[-1],
+                    'adress': client[7],
+                    'phone': client[8],
+                    'email': client[9],
+                    'birthday_date': str(client[10]),
+                    'cabinet': client[11],
+                    'dop_information': client[12],
+                    'department': department,
+                    'job': job,
+                    'role': role
+                }
+            )
 
-    cur.close()
-    conn.close()
+            cur.close()
+            conn.close()
 
-    return jsonify(client_json)
+            return jsonify(client_json)
+        else:
+            return {'message': 'no client with such id'}
+    except:
+        return {'message': 'error'}
 
 @app.route('/api/v1/events', methods=['GET'])
 def get_events():
@@ -264,38 +282,44 @@ def get_events():
 
 @app.route('/api/v1/events/<int:event_id>', methods=['GET'])
 def get_one_event(event_id):
-    conn = get_connection()
-    cur = conn.cursor()
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
 
-    cur.execute(f'SELECT * FROM event WHERE event_id={event_id}')
+        cur.execute(f'SELECT * FROM event WHERE event_id={event_id}')
 
-    event = cur.fetchone()
+        event = cur.fetchone()
 
-    event_json = []
+        if event:
+            event_json = []
 
-    event_type_id = event[3]
-    cur.execute(f'SELECT title FROM event_type WHERE event_type_id={event_type_id}')
-    event_type = cur.fetchone()[0]
+            event_type_id = event[3]
+            cur.execute(f'SELECT title FROM event_type WHERE event_type_id={event_type_id}')
+            event_type = cur.fetchone()[0]
 
-    author_id = event[4]
-    cur.execute(f'SELECT surname, name, patronymic '
-                f'FROM client WHERE client_id={author_id}')
-    client = cur.fetchone()
+            author_id = event[4]
+            cur.execute(f'SELECT surname, name, patronymic '
+                        f'FROM client WHERE client_id={author_id}')
+            client = cur.fetchone()
 
-    event_json.append(
-        {
-            'id': event[0],
-            'title': event[1],
-            'description': event[2],
-            'event_type': event_type,
-            'author': f'{client[0]} {client[1][0]}. {client[2][0]}.',
-            'image_path': event[5],
-            'date_start': str(event[6]),
-            'date_end': str(event[7])
-        }
-    )
+            event_json.append(
+                {
+                    'id': event[0],
+                    'title': event[1],
+                    'description': event[2],
+                    'event_type': event_type,
+                    'author': f'{client[0]} {client[1][0]}. {client[2][0]}.',
+                    'image_path': event[5],
+                    'date_start': str(event[6]),
+                    'date_end': str(event[7])
+                }
+            )
 
-    return jsonify(event_json)
+            return jsonify(event_json)
+        else:
+            return {'message': 'no event with such id'}
+    except:
+        return {'message': 'error'}
 
 @app.route('/api/v1/learnings', methods=['GET'])
 def get_learnings():
@@ -328,30 +352,36 @@ def get_learnings():
 
 @app.route('/api/v1/learnings/<int:learning_id>')
 def get_one_learning(learning_id):
-    conn = get_connection()
-    cur = conn.cursor()
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
 
-    cur.execute('SELECT event_id, title, description, author_id, image_path, date_start, date_end '
-                f'FROM event WHERE event_type_id=1 AND event_id={learning_id}')
-    learning = cur.fetchone()
+        cur.execute('SELECT event_id, title, description, author_id, image_path, date_start, date_end '
+                    f'FROM event WHERE event_type_id=1 AND event_id={learning_id}')
 
-    cur.execute(f'SELECT surname, name, patronymic FROM client WHERE client_id={learning[3]}')
-    author = cur.fetchone()
+        learning = cur.fetchone()
 
-    learning_json = [
-        {
-            'id': learning[0],
-            'title': learning[1],
-            'description': learning[2],
-            'author': f'{author[0]} {author[1][0]}. {author[2][0]}',
-            'image_path': learning[4],
-            'date_start': str(learning[5]),
-            'date_end': str(learning[6])
-        }
-    ]
+        if learning:
+            cur.execute(f'SELECT surname, name, patronymic FROM client WHERE client_id={learning[3]}')
+            author = cur.fetchone()
 
-    return jsonify(learning_json)
+            learning_json = [
+                {
+                    'id': learning[0],
+                    'title': learning[1],
+                    'description': learning[2],
+                    'author': f'{author[0]} {author[1][0]}. {author[2][0]}',
+                    'image_path': learning[4],
+                    'date_start': str(learning[5]),
+                    'date_end': str(learning[6])
+                }
+            ]
 
+            return jsonify(learning_json)
+        else:
+            return {'message': 'no learning with such id'}
+    except:
+        return {'message': 'error'}
 
 @app.route('/api/v1/news', methods=['POST'])
 def add_news():

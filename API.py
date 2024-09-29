@@ -55,24 +55,24 @@ def get_one_news(news_id):
 
     cur.execute(f'SELECT * FROM news WHERE news_id={news_id}')
 
-    news = cur.fetchall()
+    news = cur.fetchone()
 
     news_json = []
-    for one_news in news:
-        author_id = one_news[4]
-        cur.execute(f'SELECT surname, name, patronymic FROM client WHERE client_id={author_id}')
-        author = cur.fetchone()
 
-        news_json.append(
-            {
-                'id': one_news[0],
-                'title': one_news[1],
-                'description': one_news[2],
-                'date': str(one_news[3]),
-                'author': f'{author[0]}.{author[1][0]}.{author[2][0]}',
-                'image_path': one_news[5]
-            }
-        )
+    author_id = news[4]
+    cur.execute(f'SELECT surname, name, patronymic FROM client WHERE client_id={author_id}')
+    author = cur.fetchone()
+
+    news_json.append(
+        {
+            'id': news[0],
+            'title': news[1],
+            'description': news[2],
+            'date': str(news[3]),
+            'author': f'{author[0]}.{author[1][0]}.{author[2][0]}',
+            'image_path': news[5]
+        }
+    )
 
     cur.close()
     conn.close()
@@ -93,6 +93,7 @@ def get_resume():
         job_id = resume[5]
         cur.execute(f'SELECT title FROM job_title WHERE job_title_id={job_id}')
         job = cur.fetchone()
+
         resumes_json.append(
             {
                 'id': resume[0],
@@ -114,26 +115,27 @@ def get_one_resume(resume_id):
 
     cur.execute(f'SELECT * FROM resume WHERE resume_id={resume_id}')
 
-    resumes = cur.fetchall()
+    resume = cur.fetchone()
 
-    resumes_json = []
-    for resume in resumes:
-        job_id = resume[5]
-        cur.execute(f'SELECT title FROM job_title WHERE job_title_id={job_id}')
-        job = cur.fetchone()
-        resumes_json.append(
-            {
-                'id': resume[0],
-                'author': f'{resume[1]} {resume[2][0]}. {resume[3][0]}.',
-                'file_path': resume[4].split('/')[-1],
-                'job_title': job[0]
-            }
-        )
+    resume_json = []
+
+    job_id = resume[5]
+    cur.execute(f'SELECT title FROM job_title WHERE job_title_id={job_id}')
+    job = cur.fetchone()
+
+    resume_json.append(
+        {
+            'id': resume[0],
+            'author': f'{resume[1]} {resume[2][0]}. {resume[3][0]}.',
+            'file_path': resume[4].split('/')[-1],
+            'job_title': job[0]
+        }
+    )
 
     cur.close()
     conn.close()
 
-    return jsonify(resumes_json)
+    return jsonify(resume_json)
 
 @app.route('/api/v1/clients', methods=['GET'])
 def get_clients():
@@ -187,43 +189,43 @@ def get_client(client_id):
 
     cur.execute(f'SELECT * FROM client WHERE client_id={client_id}')
 
-    clients = cur.fetchall()
+    client = cur.fetchone()
 
-    clients_json = []
-    for client in clients:
-        department_id = client[13]
-        cur.execute(f'SELECT title FROM department WHERE department_id={department_id}')
-        department = cur.fetchone()[0]
+    client_json = []
 
-        job_id = client[14]
-        cur.execute(f'SELECT title FROM job_title WHERE job_title_id={job_id}')
-        job = cur.fetchone()[0]
+    department_id = client[13]
+    cur.execute(f'SELECT title FROM department WHERE department_id={department_id}')
+    department = cur.fetchone()[0]
 
-        role_id = client[15]
-        cur.execute(f'SELECT title FROM system_role WHERE system_role_id={role_id}')
-        role = cur.fetchone()[0]
+    job_id = client[14]
+    cur.execute(f'SELECT title FROM job_title WHERE job_title_id={job_id}')
+    job = cur.fetchone()[0]
 
-        clients_json.append(
-            {
-                'id': client[0],
-                'FIO': f'{client[1]} {client[2][0]}. {client[3][0]}.',
-                'photo': client[6].split('/')[-1],
-                'adress': client[7],
-                'phone': client[8],
-                'email': client[9],
-                'birthday_date': str(client[10]),
-                'cabinet': client[11],
-                'dop_information': client[12],
-                'department': department,
-                'job': job,
-                'role': role
-            }
-        )
+    role_id = client[15]
+    cur.execute(f'SELECT title FROM system_role WHERE system_role_id={role_id}')
+    role = cur.fetchone()[0]
+
+    client_json.append(
+        {
+            'id': client[0],
+            'FIO': f'{client[1]} {client[2][0]}. {client[3][0]}.',
+            'photo': client[6].split('/')[-1],
+            'adress': client[7],
+            'phone': client[8],
+            'email': client[9],
+            'birthday_date': str(client[10]),
+            'cabinet': client[11],
+            'dop_information': client[12],
+            'department': department,
+            'job': job,
+            'role': role
+        }
+    )
 
     cur.close()
     conn.close()
 
-    return jsonify(clients_json)
+    return jsonify(client_json)
 
 @app.route('/api/v1/events', methods=['GET'])
 def get_events():
@@ -267,33 +269,33 @@ def get_one_event(event_id):
 
     cur.execute(f'SELECT * FROM event WHERE event_id={event_id}')
 
-    events = cur.fetchall()
+    event = cur.fetchone()
 
-    events_json = []
-    for event in events:
-        event_type_id = event[3]
-        cur.execute(f'SELECT title FROM event_type WHERE event_type_id={event_type_id}')
-        event_type = cur.fetchone()[0]
+    event_json = []
 
-        author_id = event[4]
-        cur.execute(f'SELECT surname, name, patronymic '
-                    f'FROM client WHERE client_id={author_id}')
-        client = cur.fetchone()
+    event_type_id = event[3]
+    cur.execute(f'SELECT title FROM event_type WHERE event_type_id={event_type_id}')
+    event_type = cur.fetchone()[0]
 
-        events_json.append(
-            {
-                'id': event[0],
-                'title': event[1],
-                'description': event[2],
-                'event_type': event_type,
-                'author': f'{client[0]} {client[1][0]}. {client[2][0]}.',
-                'image_path': event[5],
-                'date_start': str(event[6]),
-                'date_end': str(event[7])
-            }
-        )
+    author_id = event[4]
+    cur.execute(f'SELECT surname, name, patronymic '
+                f'FROM client WHERE client_id={author_id}')
+    client = cur.fetchone()
 
-    return jsonify(events_json)
+    event_json.append(
+        {
+            'id': event[0],
+            'title': event[1],
+            'description': event[2],
+            'event_type': event_type,
+            'author': f'{client[0]} {client[1][0]}. {client[2][0]}.',
+            'image_path': event[5],
+            'date_start': str(event[6]),
+            'date_end': str(event[7])
+        }
+    )
+
+    return jsonify(event_json)
 
 @app.route('/api/v1/learnings', methods=['GET'])
 def get_learnings():

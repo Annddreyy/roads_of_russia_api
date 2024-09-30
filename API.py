@@ -1,7 +1,9 @@
 import pyodbc
 from flask import Flask, jsonify, request
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+CORS(app)
 
 def get_connection():
     SERVER = 'localhost'
@@ -294,6 +296,7 @@ def get_client(client_id):
         }
 
 @app.route('/api/v1/events', methods=['GET'])
+@cross_origin()
 def get_events():
     try:
         conn = get_connection()

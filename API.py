@@ -310,7 +310,7 @@ def get_events():
             event_type = cur.fetchone()[0]
 
             author_id = event[4]
-            cur.execute(f'SELECT surname, name, patronymic '
+            cur.execute(f'SELECT surname, name, patronymic, photo '
                         f'FROM client WHERE client_id={author_id}')
             client = cur.fetchone()
 
@@ -321,6 +321,7 @@ def get_events():
                     'description': event[2],
                     'event_type': event_type,
                     'author': f'{client[0]} {client[1][0]}. {client[2][0]}.',
+                    'photo': client[3],
                     'image_path': event[5],
                     'date_start': str(event[6]),
                     'date_end': str(event[7])

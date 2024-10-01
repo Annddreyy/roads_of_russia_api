@@ -468,6 +468,27 @@ def get_one_learning(learning_id):
             "message": "Internal server error. Please try again later."
         }
 
+@app.route('/api/v1/event_types')
+def get_event_types():
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute('SELECT * FROM event_type')
+
+    event_types = cur.fetchall()
+
+    event_types_json = []
+    for event_type in event_types:
+        event_types_json.append(
+            {
+                'id': event_type[0],
+                'title': event_type[1],
+                'description': event_type[2]
+            }
+        )
+
+    return jsonify(event_types_json)
+
 @app.route('/api/v1/news', methods=['POST'])
 def add_news():
     conn = get_connection()
@@ -488,8 +509,36 @@ def add_news():
     cur.close()
     conn.close()
 
-    return jsonify({'message': 'Новость успешно добавлена!'}), 200
+    return jsonify({'message': 'News was been upload!'}), 200
 
+
+@app.route('/api/v1/events', methods=['POST'])
+def add_event():
+    conn = get_connection()
+    cur = conn.cursor()
+
+    event = request.get_json()
+
+    title = event['title']
+    text = event['text']
+    date_start = event['date_start']
+    date_end = event['date_end']
+    event_type_id = event['event_type']
+    author = event['author']
+    image_path = event['image_path']
+
+    cur.execute('INSERT INTO event'
+                '(title, description, event_type_id, author_id, '
+                'image_path, date_start, date_end) '
+                f"VALUES('{title}', '{text}', {int(event_type_id)}, "
+                f"{author}, '{image_path}', '{date_start}', '{date_end}')")
+
+    cur.commit()
+
+    cur.close()
+    conn.close()
+
+    return jsonify({'message': 'Event was been upload!'}), 200
 
 if __name__ == '__main__':
     app.run(port=2345)

@@ -16,7 +16,8 @@ def get_learnings():
         learnings_json = []
         for learning in learnings:
             author_id = learning[3]
-            cur.execute(f'SELECT surname, name, patronymic FROM client WHERE client_id={author_id}')
+            cur.execute(f'SELECT surname, name, patronymic, photo '
+                        f'FROM client WHERE client_id={author_id}')
             author = cur.fetchone()
 
             learnings_json.append(
@@ -51,7 +52,8 @@ def get_one_learning(learning_id):
         learning = cur.fetchone()
 
         if learning:
-            cur.execute(f'SELECT surname, name, patronymic FROM client WHERE client_id={learning[3]}')
+            cur.execute(f'SELECT surname, name, patronymic '
+                        f'FROM client WHERE client_id={learning[3]}')
             author = cur.fetchone()
 
             learning_json = [

@@ -23,7 +23,7 @@ def get_resume():
                 {
                     'id': resume[0],
                     'author': f'{resume[1]} {resume[2][0]}. {resume[3][0]}.',
-                    'file_path': resume[4].split('/')[-1],
+                    'file_path': resume[4],
                     'job_title': job[0]
                 }
             )
@@ -60,7 +60,7 @@ def get_one_resume(resume_id):
                 {
                     'id': resume[0],
                     'author': f'{resume[1]} {resume[2][0]}. {resume[3][0]}.',
-                    'file_path': resume[4].split('/')[-1],
+                    'file_path': resume[4],
                     'job_title': job[0]
                 }
             )

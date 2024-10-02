@@ -1,5 +1,4 @@
 from flask import Blueprint, jsonify
-
 from db import get_connection
 
 get_event_types_blueprint = Blueprint('event_types', __name__)

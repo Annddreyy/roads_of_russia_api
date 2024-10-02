@@ -22,7 +22,7 @@ def get_events():
             author_id = event[4]
             cur.execute(f'SELECT surname, name, patronymic, photo '
                         f'FROM client WHERE client_id={author_id}')
-            client = cur.fetchone()
+            author = cur.fetchone()
 
             events_json.append(
                 {
@@ -30,8 +30,8 @@ def get_events():
                     'title': event[1],
                     'description': event[2],
                     'event_type': event_type,
-                    'author': f'{client[0]} {client[1][0]}. {client[2][0]}.',
-                    'photo': client[3],
+                    'author': f'{author[0]} {author[1][0]}. {author[2][0]}.',
+                    'photo': author[3],
                     'image_path': event[5],
                     'date_start': str(event[6]),
                     'date_end': str(event[7])
@@ -45,7 +45,6 @@ def get_events():
             "code": 500,
             "message": "Internal server error. Please try again later."
         }
-
 
 @get_events_blueprint.route('/api/v1/events/<int:event_id>', methods=['GET'])
 def get_one_event(event_id):
@@ -65,9 +64,9 @@ def get_one_event(event_id):
             event_type = cur.fetchone()[0]
 
             author_id = event[4]
-            cur.execute(f'SELECT surname, name, patronymic '
+            cur.execute(f'SELECT surname, name, patronymic, photo '
                         f'FROM client WHERE client_id={author_id}')
-            client = cur.fetchone()
+            author = cur.fetchone()
 
             event_json.append(
                 {
@@ -75,7 +74,7 @@ def get_one_event(event_id):
                     'title': event[1],
                     'description': event[2],
                     'event_type': event_type,
-                    'author': f'{client[0]} {client[1][0]}. {client[2][0]}.',
+                    'author': f'{author[0]} {author[1][0]}. {author[2][0]}.',
                     'image_path': event[5],
                     'date_start': str(event[6]),
                     'date_end': str(event[7])

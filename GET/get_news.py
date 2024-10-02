@@ -6,7 +6,6 @@ get_news_blueprint = Blueprint('news', __name__)
 @get_news_blueprint.route('/api/v1/news', methods=['GET'])
 def get_news():
     try:
-        print(1)
         conn = get_connection()
         cur = conn.cursor()
 
@@ -17,7 +16,8 @@ def get_news():
         news_json = []
         for one_news in news:
             author_id = one_news[4]
-            cur.execute(f'SELECT surname, name, patronymic, photo FROM client WHERE client_id={author_id}')
+            cur.execute(f'SELECT surname, name, patronymic, photo '
+                        f'FROM client WHERE client_id={author_id}')
             author = cur.fetchone()
 
             news_json.append(
@@ -57,7 +57,8 @@ def get_one_news(news_id):
             news_json = []
 
             author_id = news[4]
-            cur.execute(f'SELECT surname, name, patronymic FROM client WHERE client_id={author_id}')
+            cur.execute(f'SELECT surname, name, patronymic '
+                        f'FROM client WHERE client_id={author_id}')
             author = cur.fetchone()
 
             news_json.append(

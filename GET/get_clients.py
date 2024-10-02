@@ -84,7 +84,7 @@ def get_client(client_id):
                 {
                     'id': client[0],
                     'FIO': f'{client[1]} {client[2][0]}. {client[3][0]}.',
-                    'photo': client[6].split('/')[-1],
+                    'photo': client[6],
                     'adress': client[7],
                     'phone': client[8],
                     'email': client[9],

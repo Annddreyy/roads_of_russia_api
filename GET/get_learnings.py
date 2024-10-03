@@ -26,6 +26,7 @@ def get_learnings():
                     'title': learning[1],
                     'description': learning[2],
                     'author': f'{author[0]} {author[1][0]}. {author[2][0]}.',
+                    'photo': author[3],
                     'image_path': learning[4],
                     'date_start': str(learning[5]),
                     'date_end': str(learning[6])

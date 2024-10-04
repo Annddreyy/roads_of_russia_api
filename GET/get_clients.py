@@ -75,7 +75,9 @@ def get_client(client_id):
             client_json.append(
                 {
                     'id': client[0],
-                    'FIO': f'{client[1]} {client[2][0]}. {client[3][0]}.',
+                    'surname': client[1],
+                    'name': client[2],
+                    'patronymic': client[3],
                     'photo': client[6],
                     'adress': client[7],
                     'phone': client[8],

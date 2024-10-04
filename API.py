@@ -8,6 +8,7 @@ from GET.get_events import get_events_blueprint
 from GET.get_learnings import get_learnings_blueprint
 from GET.get_news import get_news_blueprint
 from GET.get_resume import get_resume_blueprint
+from PATCH.patch_client import patch_client_blueprint
 
 from POST.post_event import post_event_blueprint
 from POST.post_learning import post_learning_blueprint
@@ -28,6 +29,8 @@ app.register_blueprint(get_authorization_blueprint)
 app.register_blueprint(post_news_blueprint)
 app.register_blueprint(post_event_blueprint)
 app.register_blueprint(post_learning_blueprint)
+
+app.register_blueprint(patch_client_blueprint)
 
 if __name__ == '__main__':
     app.run(port=2345)

@@ -15,10 +15,9 @@ def patch_client(client_id):
 
     user_info = cur.fetchone()
 
-    print(user_info)
 
     new_data = request.get_json()
-    print(new_data)
+
     if 'surname' in new_data:
         user_info[0] = new_data['surname']
     if 'name' in new_data:

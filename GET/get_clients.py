@@ -23,10 +23,6 @@ def get_clients():
             cur.execute(f'SELECT title FROM job_title WHERE job_title_id={job_id}')
             job = cur.fetchone()[0]
 
-            role_id = client[15]
-            cur.execute(f'SELECT title FROM system_role WHERE system_role_id={role_id}')
-            role = cur.fetchone()[0]
-
             clients_json.append(
                 {
                     'id': client[0],
@@ -40,7 +36,7 @@ def get_clients():
                     'dop_information': client[12],
                     'department': department,
                     'job': job,
-                    'role': role
+                    'role': client[15]
                 }
             )
 
@@ -76,10 +72,6 @@ def get_client(client_id):
             cur.execute(f'SELECT title FROM job_title WHERE job_title_id={job_id}')
             job = cur.fetchone()[0]
 
-            role_id = client[15]
-            cur.execute(f'SELECT title FROM system_role WHERE system_role_id={role_id}')
-            role = cur.fetchone()[0]
-
             client_json.append(
                 {
                     'id': client[0],
@@ -93,7 +85,7 @@ def get_client(client_id):
                     'dop_information': client[12],
                     'department': department,
                     'job': job,
-                    'role': role
+                    'role': client[15]
                 }
             )
 

@@ -3,6 +3,7 @@ from flask_cors import CORS
 
 from GET.get_authorization_information import get_authorization_blueprint
 from GET.get_clients import get_clients_blueprint
+from GET.get_departments import get_departments_bluprint
 from GET.get_event_types import get_event_types_blueprint
 from GET.get_events import get_events_blueprint
 from GET.get_learnings import get_learnings_blueprint
@@ -25,6 +26,7 @@ app.register_blueprint(get_learnings_blueprint)
 app.register_blueprint(get_event_types_blueprint)
 app.register_blueprint(get_events_blueprint)
 app.register_blueprint(get_authorization_blueprint)
+app.register_blueprint(get_departments_bluprint)
 
 app.register_blueprint(post_news_blueprint)
 app.register_blueprint(post_event_blueprint)

@@ -6,7 +6,6 @@ patch_client_blueprint = Blueprint('patch_client', __name__)
 
 @patch_client_blueprint.route('/api/v1/clients/<int:client_id>', methods=['PATCH'])
 def patch_client(client_id):
-    print(1)
     conn = get_connection()
     cur = conn.cursor()
 

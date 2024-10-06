@@ -24,6 +24,15 @@ def get_events():
                         f'FROM client WHERE client_id={author_id}')
             author = cur.fetchone()
 
+            cur.execute('SELECT client_id FROM event_client '
+                        f'WHERE event_id={event[0]}')
+
+            clients_data = cur.fetchall()
+
+            clients = []
+            for client in clients_data:
+                clients.append(client[0])
+
             events_json.append(
                 {
                     'id': event[0],
@@ -34,10 +43,10 @@ def get_events():
                     'photo': author[3],
                     'image_path': event[5],
                     'date_start': str(event[6]),
-                    'date_end': str(event[7])
+                    'date_end': str(event[7]),
+                    'clients': clients
                 }
             )
-
         return jsonify(events_json)
     except:
         return {
@@ -74,7 +83,7 @@ def get_one_event(event_id):
                 'author': f'{author[0]} {author[1][0]}. {author[2][0]}.',
                 'image_path': event[5],
                 'date_start': str(event[6]),
-                'date_end': str(event[7])
+                'date_end': str(event[7]),
             }
 
             return jsonify(event_json)

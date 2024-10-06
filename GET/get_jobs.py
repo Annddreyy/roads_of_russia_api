@@ -9,7 +9,7 @@ def get_jobs():
     conn = get_connection()
     cur = conn.cursor()
 
-    cur.execute('SELECT * FROM job_title')
+    cur.execute(f'SELECT * FROM job_title')
 
     jobs = cur.fetchall()
 
@@ -45,3 +45,4 @@ def get_job(job_id):
     conn.close()
 
     return jsonify(job_json)
+

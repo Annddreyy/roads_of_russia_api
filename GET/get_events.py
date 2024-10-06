@@ -75,6 +75,15 @@ def get_one_event(event_id):
                         f'FROM client WHERE client_id={author_id}')
             author = cur.fetchone()
 
+            cur.execute('SELECT client_id FROM event_client '
+                        f'WHERE event_id={event_id}')
+
+            clients_data = cur.fetchall()
+
+            clients = []
+            for client in clients_data:
+                clients.append(client[0])
+
             event_json = {
                 'id': event[0],
                 'title': event[1],
@@ -84,8 +93,8 @@ def get_one_event(event_id):
                 'image_path': event[5],
                 'date_start': str(event[6]),
                 'date_end': str(event[7]),
+                'clients': clients
             }
-
             return jsonify(event_json)
         else:
             return {

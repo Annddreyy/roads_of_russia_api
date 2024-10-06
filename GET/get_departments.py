@@ -1,9 +1,10 @@
 from flask import Blueprint, jsonify
+
 from db import get_connection
 
 get_departments_bluprint = Blueprint('departments', __name__)
 
-@get_departments_bluprint.route('/api/v1/departments')
+@get_departments_bluprint.route('/api/v1/departments', methods=['GET'])
 def get_departments():
     conn = get_connection()
     cur = conn.cursor()

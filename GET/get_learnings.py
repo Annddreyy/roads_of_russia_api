@@ -57,17 +57,15 @@ def get_one_learning(learning_id):
                         f'FROM client WHERE client_id={learning[3]}')
             author = cur.fetchone()
 
-            learning_json = [
-                {
-                    'id': learning[0],
-                    'title': learning[1],
-                    'description': learning[2],
-                    'author': f'{author[0]} {author[1][0]}. {author[2][0]}',
-                    'image_path': learning[4],
-                    'date_start': str(learning[5]),
-                    'date_end': str(learning[6])
-                }
-            ]
+            learning_json = {
+                'id': learning[0],
+                'title': learning[1],
+                'description': learning[2],
+                'author': f'{author[0]} {author[1][0]}. {author[2][0]}',
+                'image_path': learning[4],
+                'date_start': str(learning[5]),
+                'date_end': str(learning[6])
+            }
 
             return jsonify(learning_json)
         else:

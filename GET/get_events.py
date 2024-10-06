@@ -57,8 +57,6 @@ def get_one_event(event_id):
         event = cur.fetchone()
 
         if event:
-            event_json = []
-
             event_type_id = event[3]
             cur.execute(f'SELECT title FROM event_type WHERE event_type_id={event_type_id}')
             event_type = cur.fetchone()[0]
@@ -68,18 +66,16 @@ def get_one_event(event_id):
                         f'FROM client WHERE client_id={author_id}')
             author = cur.fetchone()
 
-            event_json.append(
-                {
-                    'id': event[0],
-                    'title': event[1],
-                    'description': event[2],
-                    'event_type': event_type,
-                    'author': f'{author[0]} {author[1][0]}. {author[2][0]}.',
-                    'image_path': event[5],
-                    'date_start': str(event[6]),
-                    'date_end': str(event[7])
-                }
-            )
+            event_json = {
+                'id': event[0],
+                'title': event[1],
+                'description': event[2],
+                'event_type': event_type,
+                'author': f'{author[0]} {author[1][0]}. {author[2][0]}.',
+                'image_path': event[5],
+                'date_start': str(event[6]),
+                'date_end': str(event[7])
+            }
 
             return jsonify(event_json)
         else:

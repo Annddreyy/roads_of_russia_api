@@ -62,8 +62,6 @@ def get_client(client_id):
         client = cur.fetchone()
 
         if client:
-            client_json = []
-
             department_id = client[13]
             cur.execute(f'SELECT title FROM department WHERE department_id={department_id}')
             department = cur.fetchone()[0]
@@ -72,24 +70,22 @@ def get_client(client_id):
             cur.execute(f'SELECT title FROM job_title WHERE job_title_id={job_id}')
             job = cur.fetchone()[0]
 
-            client_json.append(
-                {
-                    'id': client[0],
-                    'surname': client[1],
-                    'name': client[2],
-                    'patronymic': client[3],
-                    'photo': client[6],
-                    'adress': client[7],
-                    'phone': client[8],
-                    'email': client[9],
-                    'birthday_date': str(client[10]),
-                    'cabinet': client[11],
-                    'dop_information': client[12],
-                    'department': department,
-                    'job': job,
-                    'role': client[15]
-                }
-            )
+            client_json = {
+                'id': client[0],
+                'surname': client[1],
+                'name': client[2],
+                'patronymic': client[3],
+                'photo': client[6],
+                'adress': client[7],
+                'phone': client[8],
+                'email': client[9],
+                'birthday_date': str(client[10]),
+                'cabinet': client[11],
+                'dop_information': client[12],
+                'department': department,
+                'job': job,
+                'role': client[15]
+            }
 
             cur.close()
             conn.close()

@@ -50,20 +50,16 @@ def get_one_resume(resume_id):
         resume = cur.fetchone()
 
         if resume:
-            resume_json = []
-
             job_id = resume[5]
             cur.execute(f'SELECT title FROM job_title WHERE job_title_id={job_id}')
             job = cur.fetchone()
 
-            resume_json.append(
-                {
-                    'id': resume[0],
-                    'author': f'{resume[1]} {resume[2][0]}. {resume[3][0]}.',
-                    'file_path': resume[4],
-                    'job_title': job[0]
-                }
-            )
+            resume_json = {
+                'id': resume[0],
+                'author': f'{resume[1]} {resume[2][0]}. {resume[3][0]}.',
+                'file_path': resume[4],
+                'job_title': job[0]
+            }
 
             cur.close()
             conn.close()

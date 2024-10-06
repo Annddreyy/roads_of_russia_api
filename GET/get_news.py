@@ -54,23 +54,19 @@ def get_one_news(news_id):
         news = cur.fetchone()
 
         if news:
-            news_json = []
-
             author_id = news[4]
             cur.execute(f'SELECT surname, name, patronymic '
                         f'FROM client WHERE client_id={author_id}')
             author = cur.fetchone()
 
-            news_json.append(
-                {
-                    'id': news[0],
-                    'title': news[1],
-                    'description': news[2],
-                    'date': str(news[3]),
-                    'author': f'{author[0]}.{author[1][0]}.{author[2][0]}',
-                    'image_path': news[5]
-                }
-            )
+            news_json = {
+                'id': news[0],
+                'title': news[1],
+                'description': news[2],
+                'date': str(news[3]),
+                'author': f'{author[0]}.{author[1][0]}.{author[2][0]}',
+                'image_path': news[5]
+            }
 
             cur.close()
             conn.close()

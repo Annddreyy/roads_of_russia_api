@@ -6,21 +6,28 @@ get_departments_bluprint = Blueprint('departments', __name__)
 
 @get_departments_bluprint.route('/api/v1/departments', methods=['GET'])
 def get_departments():
-    conn = get_connection()
-    cur = conn.cursor()
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
 
-    cur.execute('SELECT department_id, title FROM department')
+        cur.execute('SELECT department_id, title FROM department')
 
-    departments = cur.fetchall()
+        departments = cur.fetchall()
 
-    departments_json = []
+        departments_json = []
 
-    for department in departments:
-        departments_json.append(
-            {
-                'id': department[0],
-                'title': department[1]
-            }
-        )
+        for department in departments:
+            departments_json.append(
+                {
+                    'id': department[0],
+                    'title': department[1]
+                }
+            )
 
-    return jsonify(departments_json)
+        return jsonify(departments_json)
+    except:
+        return {
+            "status": "error",
+            "code": 500,
+            "message": "Internal server error. Please try again later."
+        }

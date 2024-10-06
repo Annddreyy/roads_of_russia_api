@@ -34,7 +34,7 @@ def get_job(job_id):
 
     cur.execute(f'SELECT * FROM job_title WHERE job_title_id={job_id}')
 
-    job = cur.one()
+    job = cur.fetchone()
 
     job_json = {
         'id': job[0],

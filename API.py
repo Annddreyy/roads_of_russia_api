@@ -10,6 +10,7 @@ from GET.get_jobs import get_jobs_blueprint
 from GET.get_learnings import get_learnings_blueprint
 from GET.get_news import get_news_blueprint
 from GET.get_resume import get_resume_blueprint
+from GET.get_supervisor import get_supervisor_blueprint
 from PATCH.patch_client import patch_client_blueprint
 
 from POST.post_event import post_event_blueprint
@@ -29,6 +30,7 @@ app.register_blueprint(get_events_blueprint)
 app.register_blueprint(get_authorization_blueprint)
 app.register_blueprint(get_departments_bluprint)
 app.register_blueprint(get_jobs_blueprint)
+app.register_blueprint(get_supervisor_blueprint)
 
 app.register_blueprint(post_news_blueprint)
 app.register_blueprint(post_event_blueprint)

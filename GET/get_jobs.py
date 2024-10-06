@@ -26,3 +26,22 @@ def get_jobs():
     conn.close()
 
     return jsonify(jobs_json)
+
+@get_jobs_blueprint.route('/api/v1/jobs/<int:job_id>', methods=['GET'])
+def get_job(job_id):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute(f'SELECT * FROM job_title WHERE job_title_id={job_id}')
+
+    job = cur.one()
+
+    job_json = {
+        'id': job[0],
+        'title': job[1]
+    }
+
+    cur.close()
+    conn.close()
+
+    return jsonify(job_json)

@@ -52,6 +52,7 @@ def get_clients():
         cur.close()
         conn.close()
 
+
 @get_clients_blueprint.route('/api/v1/clients/<int:client_id>', methods=['GET'])
 def get_client(client_id):
     global cur, conn

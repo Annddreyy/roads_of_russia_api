@@ -41,4 +41,4 @@ app.register_blueprint(post_learning_blueprint)
 app.register_blueprint(patch_client_blueprint)
 
 if __name__ == '__main__':
-    app.run(port=2345)
+    app.run(port=80, host="0.0.0.0")

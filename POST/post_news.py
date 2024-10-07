@@ -25,7 +25,11 @@ def add_news():
 
         return jsonify({'message': 'News was been upload!'}), 200
     except Exception as e:
-        return e
+        return {
+            "status": "error",
+            "code": e,
+            "message": "Internal server error. Please try again later."
+        }
     finally:
         cur.close()
         conn.close()

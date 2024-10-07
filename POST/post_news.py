@@ -5,8 +5,6 @@ post_news_blueprint = Blueprint('post_news', __name__)
 
 @post_news_blueprint.route('/api/v1/news', methods=['POST'])
 def add_news():
-    global cur, conn
-    try:
         conn = get_connection()
         cur = conn.cursor()
 
@@ -23,13 +21,7 @@ def add_news():
 
         conn.commit()
 
-        return jsonify({'message': 'News was been upload!'}), 200
-    except:
-        return {
-            "status": "error",
-            "code": 500,
-            "message": "Internal server error. Please try again later."
-        }
-    finally:
         cur.close()
         conn.close()
+
+        return jsonify({'message': 'News was been upload!'}), 200

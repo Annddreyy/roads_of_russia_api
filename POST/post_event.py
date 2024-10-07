@@ -5,6 +5,7 @@ post_event_blueprint = Blueprint('post_event', __name__)
 
 @post_event_blueprint.route('/api/v1/events', methods=['POST'])
 def add_event():
+    global cur, conn
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -25,10 +26,7 @@ def add_event():
                     f"VALUES('{title}', '{text}', {int(event_type_id)}, "
                     f"{author}, '{image_path}', '{date_start}', '{date_end}')")
 
-        cur.commit()
-
-        cur.close()
-        conn.close()
+        conn.commit()
 
         return jsonify({'message': 'Event was been upload!'}), 200
     except:
@@ -37,3 +35,6 @@ def add_event():
             "code": 500,
             "message": "Internal server error. Please try again later."
         }
+    finally:
+        cur.close()
+        conn.close()

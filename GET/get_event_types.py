@@ -5,6 +5,7 @@ get_event_types_blueprint = Blueprint('event_types', __name__)
 
 @get_event_types_blueprint.route('/api/v1/event_types', methods=['GET'])
 def get_event_types():
+    global cur, conn
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -30,3 +31,6 @@ def get_event_types():
             "code": 500,
             "message": "Internal server error. Please try again later."
         }
+    finally:
+        cur.close()
+        conn.close()

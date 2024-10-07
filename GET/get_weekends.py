@@ -6,6 +6,7 @@ get_weekends_blueprint = Blueprint('weekends', __name__)
 
 @get_weekends_blueprint.route('/api/v1/weekends')
 def get_weekends():
+    global cur, conn
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -39,9 +40,13 @@ def get_weekends():
             "code": 500,
             "message": "Internal server error. Please try again later."
         }
+    finally:
+        cur.close()
+        conn.close()
 
 @get_weekends_blueprint.route('/api/v1/weekends/<int:weekend_id>')
 def get_weekend(weekend_id):
+    global cur, conn
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -65,9 +70,6 @@ def get_weekend(weekend_id):
                 'client': f'{client[0]} {client[1][0]}. {client[2][0]}.'
             }
 
-            cur.close()
-            conn.close()
-
             return jsonify(weekends_json)
         else:
             return {
@@ -81,3 +83,6 @@ def get_weekend(weekend_id):
             "code": 500,
             "message": "Internal server error. Please try again later."
         }
+    finally:
+        cur.close()
+        conn.close()

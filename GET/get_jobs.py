@@ -6,6 +6,7 @@ get_jobs_blueprint = Blueprint('jobs', __name__)
 
 @get_jobs_blueprint.route('/api/v1/jobs', methods=['GET'])
 def get_jobs():
+    global cur, conn
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -23,9 +24,6 @@ def get_jobs():
                 }
             )
 
-        cur.close()
-        conn.close()
-
         return jsonify(jobs_json)
     except:
         return {
@@ -33,9 +31,13 @@ def get_jobs():
             "code": 500,
             "message": "Internal server error. Please try again later."
         }
+    finally:
+        cur.close()
+        conn.close()
 
 @get_jobs_blueprint.route('/api/v1/jobs/<int:job_id>', methods=['GET'])
 def get_job(job_id):
+    global cur, conn
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -50,9 +52,6 @@ def get_job(job_id):
                 'title': job[1]
             }
 
-            cur.close()
-            conn.close()
-
             return jsonify(job_json)
         else:
             return {
@@ -66,4 +65,6 @@ def get_job(job_id):
             "code": 500,
             "message": "Internal server error. Please try again later."
         }
-
+    finally:
+        cur.close()
+        conn.close()

@@ -5,6 +5,7 @@ get_learnings_blueprint = Blueprint('learnings', __name__)
 
 @get_learnings_blueprint.route('/api/v1/learnings', methods=['GET'])
 def get_learnings():
+    global cur, conn
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -40,9 +41,13 @@ def get_learnings():
             "code": 500,
             "message": "Internal server error. Please try again later."
         }
+    finally:
+        cur.close()
+        conn.close()
 
 @get_learnings_blueprint.route('/api/v1/learnings/<int:learning_id>', methods=['GET'])
 def get_one_learning(learning_id):
+    global cur, conn
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -80,3 +85,6 @@ def get_one_learning(learning_id):
             "code": 500,
             "message": "Internal server error. Please try again later."
         }
+    finally:
+        cur.close()
+        conn.close()

@@ -5,6 +5,7 @@ post_learning_blueprint = Blueprint('post_learning', __name__)
 
 @post_learning_blueprint.route('/api/v1/learnings', methods=['POST'])
 def add_learning():
+    global cur, conn
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -24,10 +25,7 @@ def add_learning():
                     f"VALUES('{title}', '{text}', 1, "
                     f"{author}, '{image_path}', '{date_start}', '{date_end}')")
 
-        cur.commit()
-
-        cur.close()
-        conn.close()
+        conn.commit()
 
         return jsonify({'message': 'Event was been upload!'}), 200
     except:
@@ -36,3 +34,6 @@ def add_learning():
             "code": 500,
             "message": "Internal server error. Please try again later."
         }
+    finally:
+        cur.close()
+        conn.close()

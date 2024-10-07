@@ -5,6 +5,7 @@ get_clients_blueprint = Blueprint('clients', __name__)
 
 @get_clients_blueprint.route('/api/v1/clients', methods=['GET'])
 def get_clients():
+    global cur, conn
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -40,9 +41,6 @@ def get_clients():
                 }
             )
 
-        cur.close()
-        conn.close()
-
         return jsonify(clients_json)
     except:
         return {
@@ -50,9 +48,13 @@ def get_clients():
             "code": 500,
             "message": "Internal server error. Please try again later."
         }
+    finally:
+        cur.close()
+        conn.close()
 
 @get_clients_blueprint.route('/api/v1/clients/<int:client_id>', methods=['GET'])
 def get_client(client_id):
+    global cur, conn
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -87,9 +89,6 @@ def get_client(client_id):
                 'role': client[15]
             }
 
-            cur.close()
-            conn.close()
-
             return jsonify(client_json)
         else:
             return {
@@ -103,3 +102,6 @@ def get_client(client_id):
             "code": 500,
             "message": "Internal server error. Please try again later."
         }
+    finally:
+        cur.close()
+        conn.close()

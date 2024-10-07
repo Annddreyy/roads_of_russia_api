@@ -28,9 +28,6 @@ def get_resume():
                 }
             )
 
-        cur.close()
-        conn.close()
-
         return jsonify(resumes_json)
     except:
         return {
@@ -41,6 +38,7 @@ def get_resume():
 
 @get_resume_blueprint.route('/api/v1/resume/<int:resume_id>', methods=['GET'])
 def get_one_resume(resume_id):
+    global cur, conn
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -61,9 +59,6 @@ def get_one_resume(resume_id):
                 'job_title': job[0]
             }
 
-            cur.close()
-            conn.close()
-
             return jsonify(resume_json)
         else:
             return {
@@ -77,3 +72,6 @@ def get_one_resume(resume_id):
             "code": 500,
             "message": "Internal server error. Please try again later."
         }
+    finally:
+        cur.close()
+        conn.close()

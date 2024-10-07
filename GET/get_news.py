@@ -5,6 +5,7 @@ get_news_blueprint = Blueprint('news', __name__)
 
 @get_news_blueprint.route('/api/v1/news', methods=['GET'])
 def get_news():
+    global cur, conn
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -32,9 +33,6 @@ def get_news():
                 }
             )
 
-        cur.close()
-        conn.close()
-
         return jsonify(news_json)
     except:
         return {
@@ -42,9 +40,13 @@ def get_news():
             "code": 500,
             "message": "Internal server error. Please try again later."
         }
+    finally:
+        cur.close()
+        conn.close()
 
 @get_news_blueprint.route('/api/v1/news/<int:news_id>', methods=['GET'])
 def get_one_news(news_id):
+    global cur, conn
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -68,9 +70,6 @@ def get_one_news(news_id):
                 'image_path': news[5]
             }
 
-            cur.close()
-            conn.close()
-
             return jsonify(news_json)
         else:
             return {
@@ -84,3 +83,6 @@ def get_one_news(news_id):
             "code": 500,
             "message": "Internal server error. Please try again later."
         }
+    finally:
+        cur.close()
+        conn.close()

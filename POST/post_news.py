@@ -5,6 +5,7 @@ post_news_blueprint = Blueprint('post_news', __name__)
 
 @post_news_blueprint.route('/api/v1/news', methods=['POST'])
 def add_news():
+    global cur, conn
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -18,11 +19,9 @@ def add_news():
         image_path = news['image_path']
 
         cur.execute('INSERT INTO news(title, text, date, author_id, image_path) '
-                    f"VALUES('{title}', '{description}', '{date}', {author}, '{image_path}')")
-        cur.commit()
+                        f"VALUES('{title}', '{description}', '{date}', {author}, '{image_path}')")
 
-        cur.close()
-        conn.close()
+        conn.commit()
 
         return jsonify({'message': 'News was been upload!'}), 200
     except:
@@ -31,3 +30,6 @@ def add_news():
             "code": 500,
             "message": "Internal server error. Please try again later."
         }
+    finally:
+        cur.close()
+        conn.close()

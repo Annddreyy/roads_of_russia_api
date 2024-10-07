@@ -1,3 +1,5 @@
+from webbrowser import Error
+
 from flask import Blueprint, jsonify, request
 from db import get_connection
 
@@ -24,7 +26,7 @@ def add_news():
         conn.commit()
 
         return jsonify({'message': 'News was been upload!'}), 200
-    except Exception as e:
+    except Error as e:
         return {
             "status": "error",
             "code": e,

@@ -25,7 +25,7 @@ def add_news():
 
         conn.commit()
 
-        return jsonify({'message': 'News was been upload!'}), 200
+        return jsonify({'message': 'News was been upload!'})
     except Error as e:
         return {
             "status": "error",

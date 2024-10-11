@@ -17,19 +17,12 @@ def get_weekends():
 
         weekends_json = []
         for weekend in weekends:
-            client_id = weekend[3]
-
-            cur.execute('SELECT surname, name, patronymic '
-                        'FROM client '
-                        f'WHERE client_id={client_id}')
-            client = cur.fetchone()
-
             weekends_json.append(
                 {
                     'id': weekend[0],
                     'date_start': str(weekend[1]),
                     'date_end': str(weekend[2]),
-                    'client': f'{client[0]} {client[1][0]}. {client[2][0]}.'
+                    'client': weekends[3]
                 }
             )
 

@@ -6,6 +6,8 @@ patch_client_blueprint = Blueprint('patch_client', __name__)
 
 @patch_client_blueprint.route('/api/v1/clients/<int:client_id>', methods=['PATCH'])
 def patch_client(client_id):
+    global conn, cur
+    try:
         conn = get_connection()
         cur = conn.cursor()
 
@@ -47,3 +49,12 @@ def patch_client(client_id):
                 "code": 404,
                 "message": f"Object with ID {client_id} not found"
             }
+    except:
+        return {
+            "status": "error",
+            "code": 500,
+            "message": "Internal server error. Please try again later."
+        }
+    finally:
+        cur.close()
+        conn.close()
